@@ -1,0 +1,24 @@
+variables:
+  SERVER_USER: $SERVER_USER
+  SERVER_HOST: $SERVER_HOST
+  SERVER_DIR: $SERVER_DIR
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  before_script:
+    - apt-get update && apt-get install -y openssh-client && apt-get install -y rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+  script:
+    - ssh $SERVER_USER@$SERVER_HOST whoami
+    - rsync -avz --exclude='.env' ./ $SERVER_USER@$SERVER_HOST:$SERVER_DIR
+    - ssh $SERVER_USER@$SERVER_HOST "cd $SERVER_DIR && docker compose build && docker compose up -d"
+  only:
+    - master

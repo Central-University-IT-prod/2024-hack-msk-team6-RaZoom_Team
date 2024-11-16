@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.grid-container {
+    box-sizing: border-box;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 24px; 
+    max-width: 100%; 
+    margin: auto;
+
+    @media (max-width: 860px) {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+
+    @media (max-width: 500px) {
+        grid-template-columns: repeat(1, 1fr); 
+    }
+
+}
+
+.grid-item {
+    border-radius: 12px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px; 
+    text-align: center; 
+    img {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 0;
+    }
+    &:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+    transition: all 0.3s ease;
+}
